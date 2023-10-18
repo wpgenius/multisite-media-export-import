@@ -4,7 +4,7 @@
  * @class       WPGenius_Events_API
  * @author      Team WPGenius (Makarand Mane)
  * @category    Admin
- * @package     wpgenius-events-calendar/includes
+ * @package     multisite-media-export-import/includes
  * @version     1.0
  */
 
@@ -60,11 +60,11 @@ class WPGenius_Events_API{
 							'nonce'				=>	wp_create_nonce( 'event_security_nonce' ),
 							'location_url'		=>	admin_url('admin.php').'?page=add_event&event_id=',
 							'modal_url'			=>  admin_url('admin-ajax.php').'?action=create_front_event',
-							'alert'				=>	__( 'Alert!', 'wpgenius-events-calendar' ),
-							'edit_event'		=>	__( 'Edit event', 'wpgenius-events-calendar' ),
-							'json_error'		=>	__( 'Please contact administrator!', 'wpgenius-events-calendar' ),
-							'saving_msg'		=>	__( 'Saving event...', 'wpgenius-events-calendar' ),
-							'save_msg'			=>	__( 'Save', 'wpgenius-events-calendar' ),
+							'alert'				=>	__( 'Alert!', 'multisite-media-export-import' ),
+							'edit_event'		=>	__( 'Edit event', 'multisite-media-export-import' ),
+							'json_error'		=>	__( 'Please contact administrator!', 'multisite-media-export-import' ),
+							'saving_msg'		=>	__( 'Saving event...', 'multisite-media-export-import' ),
+							'save_msg'			=>	__( 'Save', 'multisite-media-export-import' ),
 						);
 			break;			
 			
@@ -80,7 +80,7 @@ class WPGenius_Events_API{
 		if ( isset( $_REQUEST['security'] ) && wp_verify_nonce( $_REQUEST['security'], $action ) ){
 			return true;
 		}
-		wp_send_json_error( array( 'msg'=> __('Invalid security token sent.', 'wpgenius-events-calendar' ) ) );
+		wp_send_json_error( array( 'msg'=> __('Invalid security token sent.', 'multisite-media-export-import' ) ) );
 	}	
 	
 	/**

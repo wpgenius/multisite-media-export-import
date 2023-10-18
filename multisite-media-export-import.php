@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: WPGenius Events Calendar
+Plugin Name: Multisite import export
 Plugin URI: https://wpgenius.in
 Description: A WPGenius Events Calendar is a another simple plugin to plan events & collect registrations from attendees.
 Version: 1.0
 Author: Team WPGenius (Makarand Mane)
 Author URI: https://makarandmane.com
-Text Domain: wpgenius-events-calendar
+Text Domain: multisite-media-export-import
 */
 /*
 Copyright 2022  Team WPGenius  (email : makarand@wpgenius.in)
@@ -31,16 +31,16 @@ include_once 'includes/widgets/widgets.php';
 // Add text domain
 add_action('plugins_loaded','wpgenius_events_translations');
 function wpgenius_events_translations(){
-    $locale = apply_filters("plugin_locale", get_locale(), 'wpgenius-events-calendar');
+    $locale = apply_filters("plugin_locale", get_locale(), 'multisite-media-export-import');
     $lang_dir = dirname( __FILE__ ) . '/languages/';
-    $mofile        = sprintf( '%1$s-%2$s.mo', 'wpgenius-events-calendar', $locale );
+    $mofile        = sprintf( '%1$s-%2$s.mo', 'multisite-media-export-import', $locale );
     $mofile_local  = $lang_dir . $mofile;
     $mofile_global = WP_LANG_DIR . '/plugins/' . $mofile;
 
     if ( file_exists( $mofile_global ) ) {
-        load_textdomain( 'wpgenius-events-calendar', $mofile_global );
+        load_textdomain( 'multisite-media-export-import', $mofile_global );
     } else {
-        load_textdomain( 'wpgenius-events-calendar', $mofile_local );
+        load_textdomain( 'multisite-media-export-import', $mofile_local );
     }  
 }
 

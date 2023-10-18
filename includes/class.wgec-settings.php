@@ -4,7 +4,7 @@
  * @class       WPGenius_Events_Settings
  * @author      Team WPGenius (Makarand Mane)
  * @category    Admin
- * @package     wpgenius-events-calendar/includes
+ * @package     multisite-media-export-import/includes
  * @version     1.0
  */
 
@@ -40,8 +40,8 @@ class WPGenius_Events_Settings extends WPGenius_Events_API{
 
 		add_submenu_page(
 			'events',
-			__('Events Settings','wpgenius-events-calendar' ), // page title
-			__('Settings','wpgenius-events-calendar' ), // menu title
+			__('Events Settings','multisite-media-export-import' ), // page title
+			__('Settings','multisite-media-export-import' ), // menu title
 			'manage_options', // capability
 			$this->page, // menu slug
 			array( $this, 'events_api_settings')
@@ -58,20 +58,20 @@ class WPGenius_Events_Settings extends WPGenius_Events_API{
 	    register_setting( $this->opt_grp, $this->prefix.'delete_settings',	array( 'type' => 'boolean', 'default' => 0 ) );
 		
 		//Register sections
-		add_settings_section( $this->prefix.'genaral',	 		__('General preference','wpgenius-events-calendar'),		array( $this, 'events_genaral_title' ),	$this->page );
-		add_settings_section( $this->prefix.'email',	 		__('E-mail preference','wpgenius-events-calendar'),		array( $this, 'events_email_title' ),	$this->page );		
-		add_settings_section( $this->prefix.'remove_section', 	__('Uninstall preference','wpgenius-events-calendar'),	array( $this, 'events_remove_section_title' ),$this->page );
+		add_settings_section( $this->prefix.'genaral',	 		__('General preference','multisite-media-export-import'),		array( $this, 'events_genaral_title' ),	$this->page );
+		add_settings_section( $this->prefix.'email',	 		__('E-mail preference','multisite-media-export-import'),		array( $this, 'events_email_title' ),	$this->page );		
+		add_settings_section( $this->prefix.'remove_section', 	__('Uninstall preference','multisite-media-export-import'),	array( $this, 'events_remove_section_title' ),$this->page );
 		
 		//Add settings to section- events_api_section 
-		add_settings_field( $this->prefix.'event_per_page',	__('Class per page :','wpgenius-events-calendar'), array( $this, 'events_event_per_page_field' ), 	$this->page, $this->prefix.'genaral', array( 'label_for' => $this->prefix.'event_per_page' ) );
+		add_settings_field( $this->prefix.'event_per_page',	__('Class per page :','multisite-media-export-import'), array( $this, 'events_event_per_page_field' ), 	$this->page, $this->prefix.'genaral', array( 'label_for' => $this->prefix.'event_per_page' ) );
 		
 		//Class reminder settings
-		add_settings_field( $this->prefix.'reminder_enabled',	__('Class reminder cron job:','wpgenius-events-calendar'), array( $this, 'events_reminder_enabled_field' ), 	$this->page, $this->prefix.'email', array( 'label_for' => 'reminder_enabled' ) );
-		add_settings_field( $this->prefix.'reminder_interval',	__('Schedule reminder Email (in minutes):','wpgenius-events-calendar'), array( $this, 'events_reminder_interval_field' ), 	$this->page, $this->prefix.'email', array( 'label_for' => $this->prefix.'reminder_interval' ) );
+		add_settings_field( $this->prefix.'reminder_enabled',	__('Class reminder cron job:','multisite-media-export-import'), array( $this, 'events_reminder_enabled_field' ), 	$this->page, $this->prefix.'email', array( 'label_for' => 'reminder_enabled' ) );
+		add_settings_field( $this->prefix.'reminder_interval',	__('Schedule reminder Email (in minutes):','multisite-media-export-import'), array( $this, 'events_reminder_interval_field' ), 	$this->page, $this->prefix.'email', array( 'label_for' => $this->prefix.'reminder_interval' ) );
 			
 		//Add settings to section- events_remove_section 
-		add_settings_field( $this->prefix.'delete_db',__('Delete Classroom database table:','wpgenius-events-calendar'), array( $this, 'events_delete_db_field' ), $this->page, $this->prefix.'remove_section', array( 'label_for' => 'delete_db' ) );
-		add_settings_field( $this->prefix.'delete_settings',__('Delete settings:','wpgenius-events-calendar'), array( $this, 'events_delete_settings_field' ), $this->page, $this->prefix.'remove_section', array( 'label_for' => 'delete_settings' ) );
+		add_settings_field( $this->prefix.'delete_db',__('Delete Classroom database table:','multisite-media-export-import'), array( $this, 'events_delete_db_field' ), $this->page, $this->prefix.'remove_section', array( 'label_for' => 'delete_db' ) );
+		add_settings_field( $this->prefix.'delete_settings',__('Delete settings:','multisite-media-export-import'), array( $this, 'events_delete_settings_field' ), $this->page, $this->prefix.'remove_section', array( 'label_for' => 'delete_settings' ) );
 		
 	}
 	
@@ -89,7 +89,7 @@ class WPGenius_Events_Settings extends WPGenius_Events_API{
 					// (sections are registered for "wporg", each field is registered to a specific section)
 					do_settings_sections( $this->page );
 					// output save settings button
-					submit_button( __( 'Save Settings','wpgenius-events-calendar') );
+					submit_button( __( 'Save Settings','multisite-media-export-import') );
                  ?>
             </form>
         </div>
@@ -98,18 +98,18 @@ class WPGenius_Events_Settings extends WPGenius_Events_API{
 	}
 	
 	function events_genaral_title(){?>
-		<p><?php _e( 'Choose general preference for Events for WPLMS below.','wpgenius-events-calendar'); ?></p>
+		<p><?php _e( 'Choose general preference for Events for WPLMS below.','multisite-media-export-import'); ?></p>
         <?php 
 	}
 	
 	function events_email_title(){?>
-		<p><?php _e( 'Choose preference for e-mail for Events below.','wpgenius-events-calendar'); ?></p>
+		<p><?php _e( 'Choose preference for e-mail for Events below.','multisite-media-export-import'); ?></p>
         <?php 
 	}	
 	
 	function events_remove_section_title(){
 		?>
-		<p><?php _e( 'Choose plugin uninstallation preference below.','wpgenius-events-calendar'); ?></p>
+		<p><?php _e( 'Choose plugin uninstallation preference below.','multisite-media-export-import'); ?></p>
         <?php 
 	}
 	
@@ -121,8 +121,8 @@ class WPGenius_Events_Settings extends WPGenius_Events_API{
 	
 	function events_reminder_enabled_field(){
 		?>
-       	 <label><input type="radio" name="<?php echo $this->prefix ?>reminder_enabled" <?php checked( get_option( $this->prefix.'reminder_enabled' ), 1 ); ?> value="1" id="reminder_enabled"> <?php _e('Enable','wpgenius-events-calendar'); ?></label>
-         <label><input type="radio" name="<?php echo $this->prefix ?>reminder_enabled" <?php checked( get_option( $this->prefix.'reminder_enabled' ), 0 ); ?> value="0"> <?php _e('Disable','wpgenius-events-calendar'); ?></label>
+       	 <label><input type="radio" name="<?php echo $this->prefix ?>reminder_enabled" <?php checked( get_option( $this->prefix.'reminder_enabled' ), 1 ); ?> value="1" id="reminder_enabled"> <?php _e('Enable','multisite-media-export-import'); ?></label>
+         <label><input type="radio" name="<?php echo $this->prefix ?>reminder_enabled" <?php checked( get_option( $this->prefix.'reminder_enabled' ), 0 ); ?> value="0"> <?php _e('Disable','multisite-media-export-import'); ?></label>
          <p>When you disable class reminder, you won't change time to schedule reminder email below.</p>
         <?php
 	}
@@ -136,15 +136,15 @@ class WPGenius_Events_Settings extends WPGenius_Events_API{
 	
 	function events_delete_db_field(){
 		?>
-       	 <input type="radio" name="<?php echo $this->prefix ?>delete_db" <?php checked( get_option( $this->prefix.'delete_db' ), 1 ); ?> value="1"> <?php _e('Yes','wpgenius-events-calendar'); ?>
-         <input type="radio" name="<?php echo $this->prefix ?>delete_db" <?php checked( get_option( $this->prefix.'delete_db' ), 0 ); ?> value="0" id="delete_db"> <?php _e('No','wpgenius-events-calendar'); ?>
+       	 <input type="radio" name="<?php echo $this->prefix ?>delete_db" <?php checked( get_option( $this->prefix.'delete_db' ), 1 ); ?> value="1"> <?php _e('Yes','multisite-media-export-import'); ?>
+         <input type="radio" name="<?php echo $this->prefix ?>delete_db" <?php checked( get_option( $this->prefix.'delete_db' ), 0 ); ?> value="0" id="delete_db"> <?php _e('No','multisite-media-export-import'); ?>
         <?php	
 	}
 	
 	function events_delete_settings_field(){
 		?>
-       	 <input type="radio" name="<?php echo $this->prefix ?>delete_settings" <?php checked( get_option( $this->prefix.'delete_settings' ), 1 ); ?> value="1"> <?php _e('Yes','wpgenius-events-calendar'); ?>
-         <input type="radio" name="<?php echo $this->prefix ?>delete_settings" <?php checked( get_option( $this->prefix.'delete_settings' ), 0 ); ?> value="0" id="delete_settings"> <?php _e('No','wpgenius-events-calendar'); ?>
+       	 <input type="radio" name="<?php echo $this->prefix ?>delete_settings" <?php checked( get_option( $this->prefix.'delete_settings' ), 1 ); ?> value="1"> <?php _e('Yes','multisite-media-export-import'); ?>
+         <input type="radio" name="<?php echo $this->prefix ?>delete_settings" <?php checked( get_option( $this->prefix.'delete_settings' ), 0 ); ?> value="0" id="delete_settings"> <?php _e('No','multisite-media-export-import'); ?>
         <?php	
 	}
 	

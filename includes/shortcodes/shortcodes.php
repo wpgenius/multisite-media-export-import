@@ -4,7 +4,7 @@
  * @class       WPGenius_Shortcodes
  * @author      Team WPGenius (Makarand Mane)
  * @category    Admin
- * @package     wpgenius-events-calendar/includes/widgets
+ * @package     multisite-media-export-import/includes/widgets
  * @version     1.0
  */
 

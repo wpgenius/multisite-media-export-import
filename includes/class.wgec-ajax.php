@@ -4,7 +4,7 @@
  * @class       WPGenius_Events_Ajax
  * @author      Team WPGenius (Makarand Mane)
  * @category    Admin
- * @package     wpgenius-events-calendar/includes
+ * @package     multisite-media-export-import/includes
  * @version     1.0
  */
 
@@ -37,7 +37,7 @@ class WPGenius_Events_Ajax extends WPGenius_Events_API{
 			//write code
 		
 		}  else {
-			wp_send_json_error( array( 'msg'=>   __( 'Invalid user.', 'wpgenius-events-calendar' ) ) );
+			wp_send_json_error( array( 'msg'=>   __( 'Invalid user.', 'multisite-media-export-import' ) ) );
 		}	
 	}
 
