@@ -51,29 +51,8 @@ class WPGenius_Events_API{
 		return $date->format( $format );		
 	}
 	
-	public function get_localise( $action ){
-		switch( $action ){
-			
-			case 'single-event' :
-				$args = array(
-							'ajax_url'			=>	admin_url('admin-ajax.php').'?action=rsvp_event',
-							'nonce'				=>	wp_create_nonce( 'event_security_nonce' ),
-							'location_url'		=>	admin_url('admin.php').'?page=add_event&event_id=',
-							'modal_url'			=>  admin_url('admin-ajax.php').'?action=create_front_event',
-							'alert'				=>	__( 'Alert!', 'multisite-media-export-import' ),
-							'edit_event'		=>	__( 'Edit event', 'multisite-media-export-import' ),
-							'json_error'		=>	__( 'Please contact administrator!', 'multisite-media-export-import' ),
-							'saving_msg'		=>	__( 'Saving event...', 'multisite-media-export-import' ),
-							'save_msg'			=>	__( 'Save', 'multisite-media-export-import' ),
-						);
-			break;			
-			
-			default:
-				$args = array();
-			break;
-			
-		}
-		return $args;
+	public function get_export( $action ){
+		
 	}	
 	
 	protected function security_check( $action ){
@@ -81,34 +60,6 @@ class WPGenius_Events_API{
 			return true;
 		}
 		wp_send_json_error( array( 'msg'=> __('Invalid security token sent.', 'multisite-media-export-import' ) ) );
-	}	
-	
-	/**
-	*	 schedule reminder mail cron job for single class
-	*/
-	private function schedule_cron( $class, $time_in_second = '' ){
-		
-	}	
-	
-	/**
-	*	Unschedule reminder mail cron job for single class
-	*/
-	private function unschedule_cron( $class_id ){
-		return wp_clear_scheduled_hook('wgec_event_reminder', array( (int)$class_id ) );
-	}	
-	
-	/**
-	*	Activate cron & schedules one time event for all upcomiong class
-	*/
-	protected function activate_cron( $time = '', $reschedule = 0 ){
-	
-	}
-	
-	/**
-	*	Deactivate cron & deletes all scheduled cron jobs
-	*/
-	protected function deactivate_cron(){	
-		
 	}
 	
 
