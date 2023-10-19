@@ -23,43 +23,82 @@ class WPGenius_Export_Actions extends WPGenius_Events_API{
 	}
 
 	private function __construct(){		
-		//Frontend
-		add_action( 'wp_enqueue_scripts',	array($this, 'enqueue_scripts'));
-		//event_reminder
-		add_action( 'event_reminder',	array( $this, 'event_reminder_mail' ),	10,	2);		
-		//event_reminder cron hook
-		add_action( 'wgec_event_reminder',	array( $this, 'event_reminder_cron' ),	10 );
-		
+		add_action('admin_menu', 	array($this,'export_menu'),	10 );
+		add_action('init',			array( $this, 'export_subsite_media' ) , 100);
 	} // END public function __construct
 
-	function enqueue_scripts( ){
-		
-		if( is_admin() )
-			return;
+	function export_menu(  ){		
+		add_media_page( __('Export Media'), __('Export media','cm-lms'),  'manage_options', 'export-media', array( $this, 'multisite_media_export' ) );
+	}
+
+	function multisite_media_export(){
+		?>
+		<div class="wrap">
+			<div id="icon-tools" class="icon32"></div>
+			<h2>Export media from sub site</h2>
+
+			<p>Custom script written for Accel to export media.</p>  
+
+			<p></p>
+
+			<form method="post" action="" class="repeater" enctype="multipart/form-data">
+				<?php wp_nonce_field( 'secure_export_to_csv', '_ipnonce' ); ?>
+				<input type="hidden" name="export_subsite_media" value="true" />
+				<p><input type="submit" value="Export" class="button-primary"/></p>
+
 				
-		if( is_singular( 'event' ) ){
-			wp_enqueue_style('wgec_css',WGEC_DIR_URL.'assets/css/style.css');			
-			wp_enqueue_script( 'wgec-common', WGEC_DIR_URL.'assets/js/wgec-common.js' ,array( 'jquery'));
-			wp_localize_script( 'wgec-common', 'wgec_common', $this->get_localise( 'common' ) );
-		}
+			</form>
+		</div>
+		<?php
 	}
+
+	function export_subsite_media(){
 	
-	public function event_reminder_mail( $event_id, $data ){
-		if ( $event_id ) {
-			extract( $data );
-			// add tokens to parse in email
+		if ( isset($_POST["export_subsite_media"] ) ) { 
 			
-		}
-	}
+			if(wp_verify_nonce( $_REQUEST['_ipnonce'] , 'secure_export_to_csv' )){
+
 	
-	public function event_reminder_cron( $event_id ){
-		
-		if( get_option( 'events_reminder_enabled' ) ){ 
-			//$data = $this->get_class( $event_id );
-			//do_action( 'event_reminder', $event_id, $data );
+				//query
+				
+				$this->download_send_headers( $_SERVER['HTTP_HOST']."_".$_POST['report_type']."-". date("YmdHis") . ".csv" );
+			
+				$out = fopen('php://output', 'w');
+					
+				$csv_row = array( "id", "URL", "Path" );
+				
+				fputcsv( $out, $csv_row );
+				
+				// Get latest 3 questions.
+				$args = array(
+					'post_type' => 'attachment',
+					'post_status' => 'inherit', 
+            		'posts_per_page' => -1,
+				);
+	
+				$the_query = new WP_Query( $args );
+				
+				if ( $the_query->have_posts()) {
+					
+					while ( $the_query->have_posts() ) {
+	
+						$the_query->the_post(  );						
+	
+						$csv_row = array(
+							get_the_ID(),
+							str_replace( site_url(), "", wp_get_attachment_url( get_the_ID() ) ) ,
+							wp_get_attachment_url( get_the_ID() ),
+						);
+						fputcsv( $out, $csv_row );
+					}
+				}
+				
+				fclose($out);		
+				die();
+			}
+	
 		}
-		else
-			$this->deactivate_cron();
+	
 	}
 		
 } // END class WPGenius_Export_Actions
