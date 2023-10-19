@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @class       WPGenius_Events_Actions
+ * @class       WPGenius_Export_Actions
  * @author      Team WPGenius (Makarand Mane)
  * @category    Admin
  * @package     multisite-media-export-import/includes
@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPGenius_Events_Actions extends WPGenius_Events_API{
+class WPGenius_Export_Actions extends WPGenius_Events_API{
 
 	public static $instance;
 	public static function init(){
 
 	    if ( is_null( self::$instance ) )
-	        self::$instance = new WPGenius_Events_Actions();
+	        self::$instance = new WPGenius_Export_Actions();
 	    return self::$instance;
 	}
 
@@ -62,4 +62,4 @@ class WPGenius_Events_Actions extends WPGenius_Events_API{
 			$this->deactivate_cron();
 	}
 		
-} // END class WPGenius_Events_Actions
+} // END class WPGenius_Export_Actions

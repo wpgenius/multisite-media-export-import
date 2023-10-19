@@ -87,16 +87,7 @@ class WPGenius_Events_API{
 	*	 schedule reminder mail cron job for single class
 	*/
 	private function schedule_cron( $class, $time_in_second = '' ){
-		if( get_option('events_reminder_enabled' ) ){
-			if( !$time_in_second ){
-				$time = get_option('events_reminder_interval' );
-				$time_in_second = $time * 60;
-			}
-				
-			$args = array( (int)$class[ 'class_id'] );
-			if( !wp_next_scheduled( 'wgec_event_reminder', $args ) )
-				wp_schedule_single_event( $class[ 'start_ts' ] - $time_in_second, 'wgec_event_reminder', $args );
-		}
+		
 	}	
 	
 	/**
@@ -110,21 +101,7 @@ class WPGenius_Events_API{
 	*	Activate cron & schedules one time event for all upcomiong class
 	*/
 	protected function activate_cron( $time = '', $reschedule = 0 ){
-		if( $reschedule ) 
-			$this->deactivate_cron(); //Remove all cron Jobs
-			
-		if( !$time )
-			$time = get_option('events_reminder_interval' );
-		$time_in_second = $time * 60;
-		
-		// global $wpdb;
-		// $args = array(
-		// 	'status'	=>  'upcoming',
-		// 	'per_page'	=>	1000
-		// );
-		// $classes = $this->get_classes( $args );
-		// foreach ($classes as $class ) 
-		// 	$this->schedule_cron( $class, $time_in_second );
+	
 	}
 	
 	/**
@@ -132,27 +109,6 @@ class WPGenius_Events_API{
 	*/
 	protected function deactivate_cron(){	
 		
-		$hook	= 'wgec_event_reminder';
-		$crons 	= _get_cron_array();
-		foreach ( $crons as $timestamp => $cron ) {
-			if ( isset( $cron[ $hook ] ) ) {
-				foreach( $cron[ $hook ] as $key => $single_event )
-					wp_unschedule_event( $timestamp, $hook, $single_event[ 'args' ] );
-			}
-		}
-		
-		/**
-		*	Optional code using DB
-		global $wpdb;
-		$args = array(
-			'status'	=>  'upcoming',
-			'per_page'	=>	1000
-		);
-		$classes = $this->get_classes( $args );
-		foreach ($classes as $class ) {
-			$this->unschedule_cron( $class[ 'class_id'] );
-		}
-		*/
 	}
 	
 

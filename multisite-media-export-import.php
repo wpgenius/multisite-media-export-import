@@ -20,13 +20,8 @@ define( 'WGEC_DIR_URL', plugin_dir_url( __FILE__ ) );
 define( 'WGEC_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 include_once 'includes/class.wgec-init.php';
-include_once 'includes/class.wgec-database.php';
-include_once 'includes/class.wgec-ajax.php';
 include_once 'includes/class.wgec-admin.php';
-include_once 'includes/class.wgec-settings.php';
 include_once 'includes/class.wgec-actions.php';
-include_once 'includes/shortcodes/shortcodes.php';
-include_once 'includes/widgets/widgets.php';
 
 // Add text domain
 add_action('plugins_loaded','wpgenius_events_translations');
@@ -44,20 +39,12 @@ function wpgenius_events_translations(){
     }  
 }
 
-if(class_exists('WPGenius_Events_Actions'))
- 	WPGenius_Events_Actions::init();
+if(class_exists('WPGenius_Export_Actions'))
+ 	WPGenius_Export_Actions::init();
 
-if(class_exists('WPGenius_Shortcodes'))
-    WPGenius_Shortcodes::init();
+if(class_exists('WPGenius_Import_Actions') && is_admin())
+ 	WPGenius_Import_Actions::init();
 
-if(class_exists('WPGenius_Events_Ajax'))
- 	WPGenius_Events_Ajax::init();
-
-if(class_exists('WPGenius_Events_Admin') && is_admin())
- 	WPGenius_Events_Admin::init();
-
-if(class_exists('WPGenius_Events_Settings'))
- 	WPGenius_Events_Settings::init();
 
 register_activation_hook( 	__FILE__, array( $wbcdb, 'activate_events' 	) );
 register_deactivation_hook( __FILE__, array( $wbcdb, 'deactivate_events' ) );

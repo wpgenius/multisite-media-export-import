@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @class       WPGenius_Events_Admin
+ * @class       WPGenius_Import_Actions
  * @author      Team WPGenius (Makarand Mane)
  * @category    Admin
  * @package     multisite-media-export-import/includes
@@ -15,14 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if( !defined( 'BACKEND_URL' ) )
 	define( "BACKEND_URL", get_bloginfo('url').'/wp-admin/' ); 
 
-class WPGenius_Events_Admin extends WPGenius_Events_API{
+class WPGenius_Import_Actions extends WPGenius_Events_API{
 
 	public static $instance;
 	public $wgec_screen;
 	public static function init(){
 
 	    if ( is_null( self::$instance ) )
-	        self::$instance = new WPGenius_Events_Admin();
+	        self::$instance = new WPGenius_Import_Actions();
 	    return self::$instance;
 	}
 
@@ -72,4 +72,4 @@ class WPGenius_Events_Admin extends WPGenius_Events_API{
 	}
 	
 
-} // END class WPGenius_Events_Admin
+} // END class WPGenius_Import_Actions
