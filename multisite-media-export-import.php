@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Multisite import export
+Plugin Name: Multisite Media Export Import
 Plugin URI: https://wpgenius.in
-Description: A WPGenius Events Calendar is a another simple plugin to plan events & collect registrations from attendees.
+Description: A WPGenius Multisite Media Export Import is created migrate media from one subsite to another in multisite setup.
 Version: 1.0
 Author: Team WPGenius (Makarand Mane)
 Author URI: https://makarandmane.com
@@ -44,4 +44,3 @@ if(class_exists('WPGenius_Export_Actions'))
 
 if(class_exists('WPGenius_Import_Actions'))
  	WPGenius_Import_Actions::init();
-    
