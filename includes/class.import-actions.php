@@ -22,15 +22,29 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 	    return self::$instance;
 	}
 
+	/**
+	 * Class constructor
+	 */
 	private function __construct(){		
 		add_action('admin_menu', 			array($this,'import_menu'),	10);
 	} // END public function __construct
 
+	/**
+	 * Add menu under media page
+	 *
+	 * @return void
+	 */
 	function import_menu(  ){		
-		add_media_page( __('Import Media'), __('Import media','cm-lms'),  'manage_options', 'import-media', 'multisite_media_import');
+		add_media_page( __('Import Media'), __('Import media','cm-lms'),  'manage_options', 'import-media', array($this,'multisite_media_import'));
 	}
 
-	function multisite_media_import(){		
+	/**
+	 * Import images from physical path server.
+	 * Check if images exist already otherwise add to database
+	 *
+	 * @return void
+	 */
+	function multisite_media_import(){
 		
 		if(isset($_FILES['media_list'])){
 			$csv = fopen($_FILES['media_list']['tmp_name'],"r");
@@ -41,8 +55,8 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 			<table border="1">
 				<thead>
 					<tr>
-						<th><?php _e( 'OLD URL', 'cm-lms') ?></th>
-						<th><?php _e( 'Old id', 'cm-lms') ?></th>
+						<th><?php _e( 'OLD ID', 'cm-lms') ?></th>
+						<th><?php _e( 'Old URL', 'cm-lms') ?></th>
 						<th><?php _e( 'New ID', 'cm-lms') ?></th>
 						<th><?php _e( 'New URL', 'cm-lms') ?></th>
 					</tr>
@@ -53,65 +67,55 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 			while(! feof($csv)){			
 				$row = fgetcsv($csv);
 				
-				if( !is_numeric($row[1]) )
+				if( !is_numeric($row[0]) )
 					continue;
 				
 				echo "<tr>";
 				echo "<td>".$row[0]."</td>";
-				echo "<td>".$row[1]."</td>";
+				echo "<td>".$row[2]."</td>";
 
-				//$post_thumbnail_id = get_post_thumbnail_id($post_id);
-				//$image_url = wp_get_attachment_image_src($post_thumbnail_id, 'full');
-				//$image_url = $image_url[0];
+				$existing_id = attachment_url_to_postid( site_url().$row[1] );
 
-				$image_url = $row[0];
-				$folder =  substr( $image_url ,59, 9);
+				if( $existing_id ){
 
-				//switch_to_blog(2); 
+					echo "<td><b>present ".$existing_id ."</b></td>";
+					echo "<td><img src='". site_url().$row[1] ."' width='200px' loading='lazy' /></td>";
 
-				$upload_dir = wp_upload_dir( ); // Set upload folder
-				$image_data = file_get_contents($image_url); // Get image data
-				$filename   = basename($image_url); // Create image file name
+				}else{
 
-				// Check folder permission and define file location
-				if( wp_mkdir_p( $upload_dir['path'] . $folder ) ) {
-					$file = $upload_dir['path'] . $folder . $filename;
-				} else {
-					$file = $upload_dir['basedir'] . $folder . $filename;
+					//Physical path to file
+					$file   	= ABSPATH.$row[1];
+					$filename   = basename( $file );
+
+					// Check image file type
+					$wp_filetype = wp_check_filetype( $filename, null );
+
+					// Set attachment data
+					$attachment = array(
+						'guid'			 => site_url().$row[1],
+						'post_mime_type' => $wp_filetype['type'],
+						'post_title'     => sanitize_file_name( $filename ),
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					);
+
+					// Create the attachment
+					$attach_id = wp_insert_attachment( $attachment, $file );
+
+					// Include image.php
+					require_once(ABSPATH . 'wp-admin/includes/image.php');
+
+					// Define attachment metadata
+					$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+
+					// Assign metadata to attachment
+					wp_update_attachment_metadata( $attach_id, $attach_data );
+
+					$new_url = wp_get_attachment_image_src($attach_id, 'full');
+					
+					echo "<td>".$attach_id ."</td>";
+					echo "<td><img src='". $new_url ."' width='200px' loading='lazy' /></td>";
 				}
-
-				// Create the image  file on the server
-				file_put_contents( $file, $image_data );
-
-				// Check image file type
-				$wp_filetype = wp_check_filetype( $filename, null );
-
-				// Set attachment data
-				$attachment = array(
-					'post_mime_type' => $wp_filetype['type'],
-					'post_title'     => sanitize_file_name( $filename ),
-					'post_content'   => '',
-					'post_status'    => 'inherit'
-				);
-
-				// Create the attachment
-				$attach_id = wp_insert_attachment( $attachment, $file );
-
-				// Include image.php
-				require_once(ABSPATH . 'wp-admin/includes/image.php');
-
-				// Define attachment metadata
-				$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-
-				// Assign metadata to attachment
-				wp_update_attachment_metadata( $attach_id, $attach_data );
-
-			// restore_current_blog(); // return to original blog
-
-			$new_url = wp_get_attachment_image_src($attach_id, 'full');
-
-				echo "<td>".$attach_id."</td>";
-				echo "<td>". $new_url[0]."</td>";
 				
 				echo "</tr>";
 				//break;
