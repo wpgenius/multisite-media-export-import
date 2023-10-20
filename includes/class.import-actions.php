@@ -50,13 +50,14 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 			$csv = fopen($_FILES['media_list']['tmp_name'],"r");
 			$column = fgetcsv($csv);
 			$user_data =array();
-				
+			$upload_dir_paths = wp_upload_dir();
 			?>
 			<table border="1">
 				<thead>
 					<tr>
 						<th><?php _e( 'OLD ID', 'cm-lms') ?></th>
 						<th><?php _e( 'Old URL', 'cm-lms') ?></th>
+						<th><?php _e( 'Status', 'cm-lms') ?></th>
 						<th><?php _e( 'New ID', 'cm-lms') ?></th>
 						<th><?php _e( 'New URL', 'cm-lms') ?></th>
 					</tr>
@@ -74,17 +75,18 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 				echo "<td>".$row[0]."</td>";
 				echo "<td>".$row[2]."</td>";
 
-				$existing_id = attachment_url_to_postid( site_url().$row[1] );
+				$existing_id = $this->get_attachment_id_from_url( site_url().$row[1] );
 
 				if( $existing_id ){
 
-					echo "<td><b>present ".$existing_id ."</b></td>";
+					echo "<td><b>Existing</b></td>";
+					echo "<td><b>".$existing_id ."</b></td>";
 					echo "<td><img src='". site_url().$row[1] ."' width='200px' loading='lazy' /></td>";
 
 				}else{
 
-					//Physical path to file
-					$file   	= ABSPATH.$row[1];
+					$file = str_replace( $upload_dir_paths['baseurl'] . '/', '', site_url().$row[1] );
+
 					$filename   = basename( $file );
 
 					// Check image file type
@@ -113,6 +115,7 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 
 					$new_url = wp_get_attachment_image_src($attach_id, 'full');
 					
+					echo "<td><b>Imported</b></td>";
 					echo "<td>".$attach_id ."</td>";
 					echo "<td><img src='". $new_url[0] ."' width='200px' loading='lazy' /></td>";
 				}
@@ -161,6 +164,42 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 			<?php
 		echo '</div>';		
 
+	}
+
+	/**
+	 * Get attachment id from url
+	 * https://gist.github.com/ahmadawais/15e964da8804153f50d4
+	 *
+	 * @param string $attachment_url
+	 * @return int
+	 */
+	function get_attachment_id_from_url( $attachment_url = '' ) {
+ 
+		global $wpdb;
+		$attachment_id = false;
+	 
+		// If there is no url, return.
+		if ( '' == $attachment_url )
+			return $attachment_id;
+	 
+		// Get the upload directory paths
+		$upload_dir_paths = wp_upload_dir();
+	 
+		// Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
+		if ( false !== strpos( $attachment_url, $upload_dir_paths['baseurl'] ) ) {
+			
+			// If this is the URL of an auto-generated thumbnail, get the URL of the original image
+			$attachment_url = preg_replace( '/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url );
+	 
+			// Remove the upload path base directory from the attachment URL
+			$attachment_url = str_replace( $upload_dir_paths['baseurl'] . '/', '', $attachment_url );
+	 
+			// Finally, run a custom database query to get the attachment ID from the modified attachment URL
+			$attachment_id = $wpdb->get_var( $wpdb->prepare( "SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value like '%s' AND wposts.post_type = 'attachment'", '%'.$attachment_url.'%' ) );
+	 
+		}
+	 
+		return $attachment_id;
 	}
 	
 
