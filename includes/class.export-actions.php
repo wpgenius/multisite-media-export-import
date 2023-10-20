@@ -22,15 +22,28 @@ class WPGenius_Export_Actions extends WPGenius_Events_API{
 	    return self::$instance;
 	}
 
+	/**
+	 * Class constructor
+	 */
 	private function __construct(){		
 		add_action('admin_menu', 	array($this,'export_menu'),	10 );
 		add_action('init',			array( $this, 'export_subsite_media' ) , 100);
 	} // END public function __construct
 
+	/**
+	 * Add menu under media page
+	 *
+	 * @return void
+	 */
 	function export_menu(  ){		
 		add_media_page( __('Export Media'), __('Export media','cm-lms'),  'manage_options', 'export-media', array( $this, 'multisite_media_export' ) );
 	}
 
+	/**
+	 * Add form for export page
+	 *
+	 * @return void
+	 */
 	function multisite_media_export(){
 		?>
 		<div class="wrap">
@@ -52,6 +65,11 @@ class WPGenius_Export_Actions extends WPGenius_Events_API{
 		<?php
 	}
 
+	/**
+	 * Export urls of all media in wordpress
+	 *
+	 * @return void
+	 */
 	function export_subsite_media(){
 	
 		if ( isset($_POST["export_subsite_media"] ) ) { 

@@ -51,7 +51,12 @@ class WPGenius_Events_API{
 		return $date->format( $format );		
 	}
 	
-	
+	/**
+	 * Send CSV filetype header to browser
+	 *
+	 * @param string $filename
+	 * @return void
+	 */
 	public function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");
