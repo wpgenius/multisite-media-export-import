@@ -114,7 +114,7 @@ class WPGenius_Import_Actions extends WPGenius_Events_API{
 					$new_url = wp_get_attachment_image_src($attach_id, 'full');
 					
 					echo "<td>".$attach_id ."</td>";
-					echo "<td><img src='". $new_url ."' width='200px' loading='lazy' /></td>";
+					echo "<td><img src='". $new_url[0] ."' width='200px' loading='lazy' /></td>";
 				}
 				
 				echo "</tr>";
